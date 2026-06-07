@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="ClassDbContext/ClassDbContext.csproj" />
+  <Project Path="ClassLibrary/ClassLibrary.csproj" />
+  <Project Path="FluentAPI/FluentAPI.csproj" />
+</Solution>
