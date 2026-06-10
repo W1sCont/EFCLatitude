@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="ClassLibrary/ClassLibrary.csproj" />
+  <Project Path="DbGames/DbGames.csproj" />
+  <Project Path="GamesDbContext/GamesDbContext.csproj" />
+</Solution>
