@@ -7,58 +7,61 @@ namespace ClassLibrary
 {
     public class Search
     {
-        static ulong FindTextInFiles(Regex regText, DirectoryInfo di, Regex regMask)
+        public static void FindTextInFiles(Regex regText, DirectoryInfo di, Regex regMask, bool chekBox, ManualResetEvent thread_stop, ManualResetEvent thread_pause, Action<string, string, string, string> fileHandler)
         {
-            StreamReader sr = null;
-            MatchCollection mc = null;
-
-            ulong CountOfMatchFiles = 0;
+            bool chek = chekBox;
 
             FileInfo[] fi = null;
             try
             {
                 fi = di.GetFiles();
             }
-            catch
-            {
-                return CountOfMatchFiles;
-            }
+            catch (Exception ex) { Console.WriteLine(ex.Message); }
 
-            foreach (FileInfo f in fi)
+            try
             {
-                if (regMask.IsMatch(f.Name))
+                foreach (FileInfo f in fi)
                 {
-                    ++CountOfMatchFiles;
-                    Console.WriteLine("File " + f.Name);
-                    if (regText != null)
-                    {
-                        try
-                        {
-                            sr = new StreamReader(di.FullName + @"\" + f.Name,
-                                Encoding.Default);
+                    if (thread_stop.WaitOne(0)) return;
+                    thread_pause.WaitOne();
 
-                            string Content = sr.ReadToEnd();
-                            sr.Close();
-                            mc = regText.Matches(Content);
-                            foreach (Match m in mc)
-                            {
-                                Console.WriteLine("Текст знайдено в позиції {0}.", m.Index);
-                            }
-                        }
-                        catch (Exception ex)
+                    if (regMask.IsMatch(f.Name))
+                    {
+                        if (regText != null)
                         {
-                            Console.WriteLine(ex.Message);
+                            try
+                            {
+                                using StreamReader sr = new StreamReader(di.FullName + @"\" + f.Name,
+                                    Encoding.Default);
+
+                                string Content = sr.ReadToEnd();
+
+                                if (regText.IsMatch(Content))
+                                    fileHandler?.Invoke(f.Name, f.DirectoryName, f.Length.ToString(), f.LastWriteTime.ToString());
+                            }
+                            catch (Exception) { continue; }
                         }
+                        else { fileHandler?.Invoke(f.Name, f.DirectoryName, f.Length.ToString(), f.LastWriteTime.ToString()); }
                     }
                 }
+                if (chek)
+                {
+                    try
+                    {
+                        DirectoryInfo[] diSub = di.GetDirectories();
+
+                        foreach (DirectoryInfo diSubDir in diSub)
+                        {
+                            if (thread_stop.WaitOne(0)) return;
+                            FindTextInFiles(regText, diSubDir, regMask, chek, thread_stop, thread_pause, fileHandler);
+                        }
+                            
+                    }
+                    catch (Exception ex) { Console.WriteLine(ex.Message); }
+                }
+
             }
-
-            DirectoryInfo[] diSub = di.GetDirectories();
-
-            foreach (DirectoryInfo diSubDir in diSub)
-                CountOfMatchFiles += FindTextInFiles(regText, diSubDir, regMask);
-
-            return CountOfMatchFiles;
+            catch (Exception ex) { Console.WriteLine(ex.Message); }
         }
     }
 }
