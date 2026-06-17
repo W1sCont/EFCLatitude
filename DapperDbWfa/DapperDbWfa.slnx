@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="DapperDbWfa/DapperDbWfa.csproj" />
+  <Project Path="Models/Models.csproj" Id="16dc2d2f-2653-4f2d-b632-2c0d97ffb794" />
+  <Project Path="ViewModels/ViewModels.csproj" Id="464c209e-4f9f-48a3-b581-aa6202b35343" />
+</Solution>
