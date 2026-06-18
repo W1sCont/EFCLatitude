@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Models
+namespace ViewModels
 {
-    public class Country
+    public class CountryIdViewModel
     {
         public int CountryID { get; set; }
         public string CountryName { get; set; }

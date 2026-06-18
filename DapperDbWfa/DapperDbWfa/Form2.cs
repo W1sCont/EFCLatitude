@@ -20,6 +20,7 @@ namespace DapperDbWfa
             InitializeComponent();
             Text = "Підключення до сервера";
             label1.Text = "Введіть назву вашого локального сервера:";
+            textBox1.Text = "(localdb)\\MSSQLLocalDB";
             button1.Text = "OK";
             button2.Text = "Cancel";
         }

@@ -20,6 +20,9 @@ namespace DapperDbWfa
             dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dataGridView1.DefaultCellStyle.SelectionBackColor = Color.LightGreen;
             dataGridView1.DefaultCellStyle.SelectionForeColor = Color.Black;
+            dataGridView1.RowHeadersVisible = false;
+            dataGridView1.BackgroundColor = SystemColors.Control;
+            dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
 
             _connectingString = connectionString;
 
@@ -94,10 +97,126 @@ namespace DapperDbWfa
                 var result = connection.Query<PromotionalViewModel>(sql).ToList();
                 dataGridView1.DataSource = result;
                 dataGridView1.Columns["GoodName"].HeaderText = "Назва товару";
-                dataGridView1.Columns["DiscountPercent"].HeaderText = "Знижка";
+                dataGridView1.Columns["DiscountPercent"].HeaderText = "Знижка %";
                 dataGridView1.Columns["CountryName"].HeaderText = "Країна";
                 dataGridView1.Columns["StartDate"].HeaderText = "Початок акції";
                 dataGridView1.Columns["EndDate"].HeaderText = "Завершення акції";
+            }
+            catch (Exception ex) { MessageBox.Show(ex.Message); }
+        }
+
+        private void citysToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                using var connection = new SqlConnection(_connectingString);
+                connection.Open();
+                // (localdb)\MSSQLLocalDB
+                var sql = @"SELECT CityName FROM dbo.Cities";
+                var result = connection.Query<CitiesViewModedl>(sql).ToList();
+                dataGridView1.DataSource = result;
+                dataGridView1.Columns["CityName"].HeaderText = "Назва міста";
+            }
+            catch (Exception ex) { MessageBox.Show(ex.Message); }
+        }
+
+        private void countrysToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                using var connection = new SqlConnection(_connectingString);
+                connection.Open();
+                // (localdb)\MSSQLLocalDB
+                var sql = @"SELECT CountryName FROM dbo.Countries";
+                var result = connection.Query<CountriesViewModel>(sql).ToList();
+                dataGridView1.DataSource = result;
+                dataGridView1.Columns["CountryName"].HeaderText = "Назва країн";
+            }
+            catch (Exception ex) { MessageBox.Show(ex.Message); }
+        }
+
+        private void fromCityToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                using var connection = new SqlConnection(_connectingString);
+                connection.Open();
+                // (localdb)\MSSQLLocalDB
+                int cityId;
+                var resultCity = connection.Query<CityIdViewModel>("SELECT CityID, CityName FROM dbo.Cities").ToList();
+                string sql = @"SELECT FullName, BirthDate, Gender, Email 
+                    FROM dbo.Customers
+                    WHERE CityID = @TargetCityId";
+                Form3 dw = new Form3(resultCity);
+                if (dw.ShowDialog() == DialogResult.OK)
+                {
+                    cityId = dw.SelectedId;
+                    var result = connection.Query<CustomerViewModel>(sql, new { TargetCityId = cityId }).ToList();
+                    dataGridView1.DataSource = result;
+                    dataGridView1.Columns["FullName"].HeaderText = "ПІБ Клієнта";
+                    dataGridView1.Columns["BirthDate"].HeaderText = "Дата народження";
+                    dataGridView1.Columns["Gender"].HeaderText = "Гендер";
+                    dataGridView1.Columns["Email"].HeaderText = "Електронна пошта";
+                }
+            }
+            catch (Exception ex) { MessageBox.Show(ex.Message); }
+        }
+
+        private void fromCountryToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                using var connection = new SqlConnection(_connectingString);
+                connection.Open();
+                // (localdb)\MSSQLLocalDB
+                int countryId;
+                var resultCountry = connection.Query<CountryIdViewModel>("SELECT CountryID, CountryName FROM dbo.Countries").ToList();
+                string sql = @"SELECT c.FullName, c.BirthDate, c.Gender, c.Email 
+                    FROM dbo.Customers c 
+                    INNER JOIN dbo.Cities city ON c.CityID = city.CityID
+                    INNER JOIN dbo.Countries countr ON city.CountryID = countr.CountryID
+                    WHERE countr.CountryID = @TargetCountryId";
+                Form3 dw = new Form3(resultCountry);
+                if (dw.ShowDialog() == DialogResult.OK)
+                {
+                    countryId = dw.SelectedId;
+                    var result = connection.Query<CustomerViewModel>(sql, new { TargetCountryId = countryId }).ToList();
+                    dataGridView1.DataSource = result;
+                    dataGridView1.Columns["FullName"].HeaderText = "ПІБ Клієнта";
+                    dataGridView1.Columns["BirthDate"].HeaderText = "Дата народження";
+                    dataGridView1.Columns["Gender"].HeaderText = "Гендер";
+                    dataGridView1.Columns["Email"].HeaderText = "Електронна пошта";
+                }
+
+            }
+            catch (Exception ex) { MessageBox.Show(ex.Message); }
+        }
+
+        private void forCountyToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                using var connection = new SqlConnection(_connectingString);
+                connection.Open();
+                // (localdb)\MSSQLLocalDB
+                int countryId;
+                var resultCountry = connection.Query<CountryIdViewModel>("SELECT CountryID, CountryName FROM dbo.Countries").ToList();
+                string sql = @"SELECT g.GoodName, p.DiscountPercent,  p.StartDate, p.EndDate
+                    FROM dbo.Promotions p
+                    INNER JOIN dbo.Goods g ON p.GoodID = g.GoodID
+                    WHERE p.CountryID = @TargetCountryId";
+                Form3 dw = new Form3(resultCountry);
+                if (dw.ShowDialog() == DialogResult.OK)
+                {
+                    countryId = dw.SelectedId;
+                    var result = connection.Query<CountryPromotionViewModel>(sql, new { TargetCountryId = countryId }).ToList();
+                    dataGridView1.DataSource = result;
+                    dataGridView1.Columns["GoodName"].HeaderText = "Назва товару";
+                    dataGridView1.Columns["DiscountPercent"].HeaderText = "Знижка (%)";
+                    dataGridView1.Columns["StartDate"].HeaderText = "Початок акції";
+                    dataGridView1.Columns["EndDate"].HeaderText = "Завершення акції";
+                }
+
             }
             catch (Exception ex) { MessageBox.Show(ex.Message); }
         }

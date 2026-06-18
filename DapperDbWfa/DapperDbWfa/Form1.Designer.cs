@@ -37,11 +37,14 @@
             exitToolStripMenuItem = new ToolStripMenuItem();
             viewToolStripMenuItem = new ToolStripMenuItem();
             allCustomersToolStripMenuItem1 = new ToolStripMenuItem();
+            fromCityToolStripMenuItem = new ToolStripMenuItem();
+            fromCountryToolStripMenuItem = new ToolStripMenuItem();
             allEmailToolStripMenuItem = new ToolStripMenuItem();
             categoriesToolStripMenuItem = new ToolStripMenuItem();
             promocionalProductToolStripMenuItem = new ToolStripMenuItem();
             citysToolStripMenuItem1 = new ToolStripMenuItem();
             countrysToolStripMenuItem1 = new ToolStripMenuItem();
+            forCountyToolStripMenuItem = new ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             menuStrip1.SuspendLayout();
             SuspendLayout();
@@ -105,10 +108,25 @@
             // 
             // allCustomersToolStripMenuItem1
             // 
+            allCustomersToolStripMenuItem1.DropDownItems.AddRange(new ToolStripItem[] { fromCityToolStripMenuItem, fromCountryToolStripMenuItem });
             allCustomersToolStripMenuItem1.Name = "allCustomersToolStripMenuItem1";
             allCustomersToolStripMenuItem1.Size = new Size(232, 26);
             allCustomersToolStripMenuItem1.Text = "All customers";
             allCustomersToolStripMenuItem1.Click += allCustomersToolStripMenuItem1_Click;
+            // 
+            // fromCityToolStripMenuItem
+            // 
+            fromCityToolStripMenuItem.Name = "fromCityToolStripMenuItem";
+            fromCityToolStripMenuItem.Size = new Size(181, 26);
+            fromCityToolStripMenuItem.Text = "From City";
+            fromCityToolStripMenuItem.Click += fromCityToolStripMenuItem_Click;
+            // 
+            // fromCountryToolStripMenuItem
+            // 
+            fromCountryToolStripMenuItem.Name = "fromCountryToolStripMenuItem";
+            fromCountryToolStripMenuItem.Size = new Size(181, 26);
+            fromCountryToolStripMenuItem.Text = "From Country";
+            fromCountryToolStripMenuItem.Click += fromCountryToolStripMenuItem_Click;
             // 
             // allEmailToolStripMenuItem
             // 
@@ -126,6 +144,7 @@
             // 
             // promocionalProductToolStripMenuItem
             // 
+            promocionalProductToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { forCountyToolStripMenuItem });
             promocionalProductToolStripMenuItem.Name = "promocionalProductToolStripMenuItem";
             promocionalProductToolStripMenuItem.Size = new Size(232, 26);
             promocionalProductToolStripMenuItem.Text = "Promocional product";
@@ -136,12 +155,21 @@
             citysToolStripMenuItem1.Name = "citysToolStripMenuItem1";
             citysToolStripMenuItem1.Size = new Size(232, 26);
             citysToolStripMenuItem1.Text = "Citys";
+            citysToolStripMenuItem1.Click += citysToolStripMenuItem1_Click;
             // 
             // countrysToolStripMenuItem1
             // 
             countrysToolStripMenuItem1.Name = "countrysToolStripMenuItem1";
             countrysToolStripMenuItem1.Size = new Size(232, 26);
             countrysToolStripMenuItem1.Text = "Countrys";
+            countrysToolStripMenuItem1.Click += countrysToolStripMenuItem1_Click;
+            // 
+            // forCountyToolStripMenuItem
+            // 
+            forCountyToolStripMenuItem.Name = "forCountyToolStripMenuItem";
+            forCountyToolStripMenuItem.Size = new Size(224, 26);
+            forCountyToolStripMenuItem.Text = "For county";
+            forCountyToolStripMenuItem.Click += forCountyToolStripMenuItem_Click;
             // 
             // Form1
             // 
@@ -177,5 +205,8 @@
         private ToolStripMenuItem promocionalProductToolStripMenuItem;
         private ToolStripMenuItem citysToolStripMenuItem1;
         private ToolStripMenuItem countrysToolStripMenuItem1;
+        private ToolStripMenuItem fromCityToolStripMenuItem;
+        private ToolStripMenuItem fromCountryToolStripMenuItem;
+        private ToolStripMenuItem forCountyToolStripMenuItem;
     }
 }
