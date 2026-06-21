@@ -109,7 +109,6 @@ namespace DapperDbWfa
                 dateTimePicker2.Value = (DateTime)row.Cells["EndDate"].Value;
             }
         }
-
         private void button1_Click(object sender, EventArgs e)
         {
             if (dateTimePicker2.Value.Date < dateTimePicker1.Value.Date)
