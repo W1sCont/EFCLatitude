@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Dapper;
+using Microsoft.Data.SqlClient;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -12,6 +14,7 @@ namespace DapperDbWfa
     public partial class Form3 : Form
     {
         public int SelectedId { get; private set; }
+
         public Form3(List<CountryIdViewModel> ls)
         {
             InitializeComponent();

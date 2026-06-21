@@ -25,16 +25,6 @@ namespace DapperDbWfa
             dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
 
             _connectingString = connectionString;
-
-        }
-
-        private void RefreshGrid()
-        {
-
-        }
-
-        private void allCustomersToolStripMenuItem1_Click(object sender, EventArgs e)
-        {
             try
             {
                 using var connection = new SqlConnection(_connectingString);
@@ -50,13 +40,34 @@ namespace DapperDbWfa
             catch (Exception ex) { MessageBox.Show(ex.Message); }
         }
 
+        private void RefreshGrid()
+        {
+            try
+            {
+                using var connection = new SqlConnection(_connectingString);
+                connection.Open();
+                var result = connection.Query<CustomerViewModel>("SELECT FullName, BirthDate, Gender, Email FROM Customers").ToList();
+                dataGridView1.DataSource = result;
+                dataGridView1.Columns["FullName"].HeaderText = "ПІБ Клієнта";
+                dataGridView1.Columns["BirthDate"].HeaderText = "Дата народження";
+                dataGridView1.Columns["Gender"].HeaderText = "Гендер";
+                dataGridView1.Columns["Email"].HeaderText = "Електронна пошта";
+            }
+            catch (Exception ex) { MessageBox.Show(ex.Message); }
+
+        }
+
+        private void allCustomersToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            RefreshGrid();
+        }
+
         private void allEmailToolStripMenuItem_Click(object sender, EventArgs e)
         {
             try
             {
                 using var connection = new SqlConnection(_connectingString);
                 connection.Open();
-                // (localdb)\MSSQLLocalDB
                 var result = connection.Query<EmailViewModel>("SELECT Email FROM dbo.Customers").ToList();
                 dataGridView1.DataSource = result;
                 dataGridView1.Columns["Email"].HeaderText = "Електронна пошта";
@@ -70,7 +81,6 @@ namespace DapperDbWfa
             {
                 using var connection = new SqlConnection(_connectingString);
                 connection.Open();
-                // (localdb)\MSSQLLocalDB
                 var result = connection.Query<CategoryViewModel>("SELECT CategoryName FROM dbo.Categories").ToList();
                 dataGridView1.DataSource = result;
                 dataGridView1.Columns["CategoryName"].HeaderText = "Назва категорії";
@@ -85,7 +95,6 @@ namespace DapperDbWfa
             {
                 using var connection = new SqlConnection(_connectingString);
                 connection.Open();
-                // (localdb)\MSSQLLocalDB
                 var sql = @"SELECT g.GoodName, 
                    p.DiscountPercent, 
                    c.CountryName, 
@@ -111,7 +120,6 @@ namespace DapperDbWfa
             {
                 using var connection = new SqlConnection(_connectingString);
                 connection.Open();
-                // (localdb)\MSSQLLocalDB
                 var sql = @"SELECT CityName FROM dbo.Cities";
                 var result = connection.Query<CitiesViewModedl>(sql).ToList();
                 dataGridView1.DataSource = result;
@@ -126,7 +134,6 @@ namespace DapperDbWfa
             {
                 using var connection = new SqlConnection(_connectingString);
                 connection.Open();
-                // (localdb)\MSSQLLocalDB
                 var sql = @"SELECT CountryName FROM dbo.Countries";
                 var result = connection.Query<CountriesViewModel>(sql).ToList();
                 dataGridView1.DataSource = result;
@@ -141,7 +148,6 @@ namespace DapperDbWfa
             {
                 using var connection = new SqlConnection(_connectingString);
                 connection.Open();
-                // (localdb)\MSSQLLocalDB
                 int cityId;
                 var resultCity = connection.Query<CityIdViewModel>("SELECT CityID, CityName FROM dbo.Cities").ToList();
                 string sql = @"SELECT FullName, BirthDate, Gender, Email 
@@ -168,7 +174,6 @@ namespace DapperDbWfa
             {
                 using var connection = new SqlConnection(_connectingString);
                 connection.Open();
-                // (localdb)\MSSQLLocalDB
                 int countryId;
                 var resultCountry = connection.Query<CountryIdViewModel>("SELECT CountryID, CountryName FROM dbo.Countries").ToList();
                 string sql = @"SELECT c.FullName, c.BirthDate, c.Gender, c.Email 
@@ -198,7 +203,6 @@ namespace DapperDbWfa
             {
                 using var connection = new SqlConnection(_connectingString);
                 connection.Open();
-                // (localdb)\MSSQLLocalDB
                 int countryId;
                 var resultCountry = connection.Query<CountryIdViewModel>("SELECT CountryID, CountryName FROM dbo.Countries").ToList();
                 string sql = @"SELECT g.GoodName, p.DiscountPercent,  p.StartDate, p.EndDate
@@ -219,6 +223,76 @@ namespace DapperDbWfa
 
             }
             catch (Exception ex) { MessageBox.Show(ex.Message); }
+        }
+
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
+
+        private void customerToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Form4 addCustomer = new Form4(_connectingString);
+            if (addCustomer.ShowDialog() == DialogResult.OK)
+            {
+                RefreshGrid();
+            }
+        }
+
+        private void countryToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Form5 addCountry = new Form5(_connectingString, "Country");
+            if (addCountry.ShowDialog() == DialogResult.OK)
+            {
+
+            }
+        }
+
+        private void countryToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            Form5 editCountry = new Form5(_connectingString, "Country");
+            if (editCountry.ShowDialog() == DialogResult.OK)
+            {
+
+            }
+        }
+
+        private void cityToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Form5 addCity = new Form5(_connectingString, "City");
+            if (addCity.ShowDialog() == DialogResult.OK)
+            {
+
+            }
+        }
+
+        private void cityToolStripMenuItem2_Click(object sender, EventArgs e)
+        {
+            Form5 editCity = new Form5(_connectingString, "City");
+            if (editCity.ShowDialog() == DialogResult.OK)
+            {
+
+            }
+        }
+
+        private void addToolStripMenuItem_Click(object sender, EventArgs e) { }
+
+        private void categoryToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Form5 category = new Form5(_connectingString, "Category");
+            if (category.ShowDialog() == DialogResult.OK)
+            {
+
+            }
+        }
+
+        private void promotionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Form6 promotion = new Form6(_connectingString);
+            if (promotion.ShowDialog() == DialogResult.OK)
+            {
+
+            }
         }
     }
 }

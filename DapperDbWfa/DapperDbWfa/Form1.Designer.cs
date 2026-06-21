@@ -32,8 +32,11 @@
             menuStrip1 = new MenuStrip();
             menuToolStripMenuItem = new ToolStripMenuItem();
             addToolStripMenuItem = new ToolStripMenuItem();
-            editToolStripMenuItem = new ToolStripMenuItem();
-            removeToolStripMenuItem = new ToolStripMenuItem();
+            customerToolStripMenuItem = new ToolStripMenuItem();
+            countryToolStripMenuItem = new ToolStripMenuItem();
+            cityToolStripMenuItem = new ToolStripMenuItem();
+            categoryToolStripMenuItem = new ToolStripMenuItem();
+            promotionToolStripMenuItem = new ToolStripMenuItem();
             exitToolStripMenuItem = new ToolStripMenuItem();
             viewToolStripMenuItem = new ToolStripMenuItem();
             allCustomersToolStripMenuItem1 = new ToolStripMenuItem();
@@ -42,9 +45,9 @@
             allEmailToolStripMenuItem = new ToolStripMenuItem();
             categoriesToolStripMenuItem = new ToolStripMenuItem();
             promocionalProductToolStripMenuItem = new ToolStripMenuItem();
+            forCountyToolStripMenuItem = new ToolStripMenuItem();
             citysToolStripMenuItem1 = new ToolStripMenuItem();
             countrysToolStripMenuItem1 = new ToolStripMenuItem();
-            forCountyToolStripMenuItem = new ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             menuStrip1.SuspendLayout();
             SuspendLayout();
@@ -70,34 +73,60 @@
             // 
             // menuToolStripMenuItem
             // 
-            menuToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { addToolStripMenuItem, editToolStripMenuItem, removeToolStripMenuItem, exitToolStripMenuItem });
+            menuToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { addToolStripMenuItem, exitToolStripMenuItem });
             menuToolStripMenuItem.Name = "menuToolStripMenuItem";
             menuToolStripMenuItem.Size = new Size(60, 24);
             menuToolStripMenuItem.Text = "Menu";
             // 
             // addToolStripMenuItem
             // 
+            addToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { customerToolStripMenuItem, countryToolStripMenuItem, cityToolStripMenuItem, categoryToolStripMenuItem, promotionToolStripMenuItem });
             addToolStripMenuItem.Name = "addToolStripMenuItem";
-            addToolStripMenuItem.Size = new Size(146, 26);
-            addToolStripMenuItem.Text = "Add";
+            addToolStripMenuItem.Size = new Size(224, 26);
+            addToolStripMenuItem.Text = "Add/Edit/Remove";
+            addToolStripMenuItem.Click += addToolStripMenuItem_Click;
             // 
-            // editToolStripMenuItem
+            // customerToolStripMenuItem
             // 
-            editToolStripMenuItem.Name = "editToolStripMenuItem";
-            editToolStripMenuItem.Size = new Size(146, 26);
-            editToolStripMenuItem.Text = "Edit";
+            customerToolStripMenuItem.Name = "customerToolStripMenuItem";
+            customerToolStripMenuItem.Size = new Size(224, 26);
+            customerToolStripMenuItem.Text = "Customer";
+            customerToolStripMenuItem.Click += customerToolStripMenuItem_Click;
             // 
-            // removeToolStripMenuItem
+            // countryToolStripMenuItem
             // 
-            removeToolStripMenuItem.Name = "removeToolStripMenuItem";
-            removeToolStripMenuItem.Size = new Size(146, 26);
-            removeToolStripMenuItem.Text = "Remove";
+            countryToolStripMenuItem.Name = "countryToolStripMenuItem";
+            countryToolStripMenuItem.Size = new Size(224, 26);
+            countryToolStripMenuItem.Text = "Country";
+            countryToolStripMenuItem.Click += countryToolStripMenuItem_Click;
+            // 
+            // cityToolStripMenuItem
+            // 
+            cityToolStripMenuItem.Name = "cityToolStripMenuItem";
+            cityToolStripMenuItem.Size = new Size(224, 26);
+            cityToolStripMenuItem.Text = "City";
+            cityToolStripMenuItem.Click += cityToolStripMenuItem_Click;
+            // 
+            // categoryToolStripMenuItem
+            // 
+            categoryToolStripMenuItem.Name = "categoryToolStripMenuItem";
+            categoryToolStripMenuItem.Size = new Size(224, 26);
+            categoryToolStripMenuItem.Text = "Category";
+            categoryToolStripMenuItem.Click += categoryToolStripMenuItem_Click;
+            // 
+            // promotionToolStripMenuItem
+            // 
+            promotionToolStripMenuItem.Name = "promotionToolStripMenuItem";
+            promotionToolStripMenuItem.Size = new Size(224, 26);
+            promotionToolStripMenuItem.Text = "Promotion";
+            promotionToolStripMenuItem.Click += promotionToolStripMenuItem_Click;
             // 
             // exitToolStripMenuItem
             // 
             exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            exitToolStripMenuItem.Size = new Size(146, 26);
+            exitToolStripMenuItem.Size = new Size(224, 26);
             exitToolStripMenuItem.Text = "Exit";
+            exitToolStripMenuItem.Click += exitToolStripMenuItem_Click;
             // 
             // viewToolStripMenuItem
             // 
@@ -150,6 +179,13 @@
             promocionalProductToolStripMenuItem.Text = "Promocional product";
             promocionalProductToolStripMenuItem.Click += promocionalProductToolStripMenuItem_Click;
             // 
+            // forCountyToolStripMenuItem
+            // 
+            forCountyToolStripMenuItem.Name = "forCountyToolStripMenuItem";
+            forCountyToolStripMenuItem.Size = new Size(161, 26);
+            forCountyToolStripMenuItem.Text = "For county";
+            forCountyToolStripMenuItem.Click += forCountyToolStripMenuItem_Click;
+            // 
             // citysToolStripMenuItem1
             // 
             citysToolStripMenuItem1.Name = "citysToolStripMenuItem1";
@@ -163,13 +199,6 @@
             countrysToolStripMenuItem1.Size = new Size(232, 26);
             countrysToolStripMenuItem1.Text = "Countrys";
             countrysToolStripMenuItem1.Click += countrysToolStripMenuItem1_Click;
-            // 
-            // forCountyToolStripMenuItem
-            // 
-            forCountyToolStripMenuItem.Name = "forCountyToolStripMenuItem";
-            forCountyToolStripMenuItem.Size = new Size(224, 26);
-            forCountyToolStripMenuItem.Text = "For county";
-            forCountyToolStripMenuItem.Click += forCountyToolStripMenuItem_Click;
             // 
             // Form1
             // 
@@ -195,8 +224,6 @@
         private MenuStrip menuStrip1;
         private ToolStripMenuItem menuToolStripMenuItem;
         private ToolStripMenuItem addToolStripMenuItem;
-        private ToolStripMenuItem editToolStripMenuItem;
-        private ToolStripMenuItem removeToolStripMenuItem;
         private ToolStripMenuItem exitToolStripMenuItem;
         private ToolStripMenuItem viewToolStripMenuItem;
         private ToolStripMenuItem allCustomersToolStripMenuItem1;
@@ -208,5 +235,10 @@
         private ToolStripMenuItem fromCityToolStripMenuItem;
         private ToolStripMenuItem fromCountryToolStripMenuItem;
         private ToolStripMenuItem forCountyToolStripMenuItem;
+        private ToolStripMenuItem customerToolStripMenuItem;
+        private ToolStripMenuItem countryToolStripMenuItem;
+        private ToolStripMenuItem cityToolStripMenuItem;
+        private ToolStripMenuItem categoryToolStripMenuItem;
+        private ToolStripMenuItem promotionToolStripMenuItem;
     }
 }
