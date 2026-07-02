@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ClassLibrary_MyCommand\ClassLibrary_MyCommand.csproj" />
+    <ProjectReference Include="..\ClassLibrary_MyProcess\ClassLibrary_MyProcess.csproj" />
+    <ProjectReference Include="..\ClassLibrary_Serialization\ClassLibrary_Serialization.csproj" />
+  </ItemGroup>
+
+</Project>

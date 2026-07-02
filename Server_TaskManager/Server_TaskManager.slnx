@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="ClassLibrary_MyCommand/ClassLibrary_MyCommand.csproj" />
+  <Project Path="ClassLibrary_MyProcess/ClassLibrary_MyProcess.csproj" />
+  <Project Path="ClassLibrary_Serialization/ClassLibrary_Serialization.csproj" />
+  <Project Path="Client_TaskManager/Client_TaskManager.csproj" />
+  <Project Path="Server_TaskManager/Server_TaskManager.csproj" />
+</Solution>
