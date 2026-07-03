@@ -31,37 +31,43 @@ namespace MyServer
         {
             try
             {
-                string data = null;
-                byte[] bytes = new byte[1024];
+                byte[] bytes = new byte[65536];
 
-                int bytesRec = await handler.ReceiveAsync(bytes);
-                Serialization_Deserialization serializer = new Serialization_Deserialization();
-                MyCommand myCommand = serializer.DeserializeObj<MyCommand>(bytes, bytesRec);
-
-                data = myCommand.ToString();
-
-                switch (myCommand.NameOfCommand)
+                while (true)
                 {
-                    case "ListProcess":
-                        await AsyncListProcess();
-                        byte[] res = serializer.SerializeObj<List<MyProcess>>(processList);
-                        handler.Send(res);
+                    int bytesRec = await handler.ReceiveAsync(bytes);
+                    if (bytesRec == 0)
+                    {
                         break;
-                    case "CreateProcess":
-                        await CreateProcess(myCommand.Path);
-                        myCommand.CommandResult = true;
-                        res = serializer.SerializeObj<MyCommand>(myCommand);
-                        handler.Send(res);
-                        break;
-                    case "KillProcess":
-                        KillProcess(new MyProcess { ProcessId = myCommand.IdProcess} );
-                        myCommand.CommandResult = true;
-                        res = serializer.SerializeObj<MyCommand>(myCommand);
-                        handler.Send(res);
-                        break;
-                    default:
-                        Console.WriteLine();
-                        break;
+                    }
+                    Serialization_Deserialization serializer = new Serialization_Deserialization();
+                    MyCommand myCommand = serializer.DeserializeObj<MyCommand>(bytes, bytesRec);
+
+                    if (myCommand == null) continue;
+
+                    switch (myCommand.NameOfCommand)
+                    {
+                        case "ListProcess":
+                            await AsyncListProcess();
+                            byte[] res = serializer.SerializeObj<List<MyProcess>>(processList);
+                            handler.Send(res);
+                            break;
+                        case "CreateProcess":
+                            await CreateProcess(myCommand.Path);
+                            myCommand.CommandResult = true;
+                            res = serializer.SerializeObj<MyCommand>(myCommand);
+                            handler.Send(res);
+                            break;
+                        case "KillProcess":
+                            KillProcess(new MyProcess { ProcessId = myCommand.IdProcess });
+                            myCommand.CommandResult = true;
+                            res = serializer.SerializeObj<MyCommand>(myCommand);
+                            handler.Send(res);
+                            break;
+                        default:
+                            Console.WriteLine();
+                            break;
+                    }
                 }
             }
             catch (Exception ex)

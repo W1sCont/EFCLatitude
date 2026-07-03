@@ -8,10 +8,12 @@ namespace Client_TaskManager
 {
     public partial class Form1 : Form
     {
+        SynchronizationContext uiContext;
         Socket sock;
         public Form1()
         {
             InitializeComponent();
+            uiContext = SynchronizationContext.Current;
             Text = "Віддалений диспетчер завдань";
             button1.Text = "Зєднання";
             button2.Text = "Оновити список";
@@ -42,9 +44,6 @@ namespace Client_TaskManager
 
                     sock = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                     sock.Connect(ipEndPoint);
-                    byte[] msg = Encoding.Default.GetBytes(Dns.GetHostName());
-                    int bytesSent = sock.Send(msg);
-                    MessageBox.Show("Клієнт " + Dns.GetHostName() + " встановив з'єднання з " + sock.RemoteEndPoint.ToString());
                 }
                 catch (Exception ex)
                 {
@@ -53,30 +52,72 @@ namespace Client_TaskManager
             });
         }
 
-        private async void Exchange()
+        private async Task RefreshGridList()
         {
             await Task.Run(() =>
             {
                 try
                 {
-                    string theMessage = textBox1.Text;
-                    byte[] msg = Encoding.Default.GetBytes(theMessage);
-                    int bytesSent = sock.Send(msg);
-                    if (theMessage.IndexOf("<end>") > -1)
-                    {
-                        byte[] bytes = new byte[1024];
-                        int bytesRec = sock.Receive(bytes);
-                        MessageBox.Show("Сервер (" + sock.RemoteEndPoint.ToString() + ") відповів: " + Encoding.Default.GetString(bytes, 0, bytesRec) /*Конвертуємо масив байтів у рядок*/);
-                        sock.Shutdown(SocketShutdown.Both);
-                        sock.Close();
-                    }
+                    MyCommand processList = new MyCommand() { NameOfCommand = "ListProcess" };
+                    Serialization_Deserialization serialization = new Serialization_Deserialization();
+                    sock.Send(serialization.SerializeObj(processList));
+                    byte[] buffer = new byte[65536];
+                    int bytesRec = sock.Receive(buffer);
+                    List<MyProcess> list = serialization.DeserializeObj<List<MyProcess>>(buffer, bytesRec);
+                    uiContext.Post(i => dataGridView1.DataSource = list, null);
                 }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Клієнт: " + ex.Message);
-                }
+                catch (Exception ex) { uiContext.Post(i => MessageBox.Show(ex.Message), null); }
             });
         }
+
+        private async Task CreateProcess()
+        {
+            if (string.IsNullOrEmpty(textBox2.Text))
+            {
+                MessageBox.Show("Назва процесу не може бути порожня!");
+                return;
+            }
+            string path = textBox2.Text.Trim();
+            await Task.Run(() =>
+            {
+                try
+                {
+                    MyCommand process = new MyCommand() { NameOfCommand = "CreateProcess", Path = path };
+                    Serialization_Deserialization serialization = new Serialization_Deserialization();
+                    sock.Send(serialization.SerializeObj(process));
+                    byte[] buffer = new byte[65536];
+                    int bytesRec = sock.Receive(buffer);
+                    MyCommand result = serialization.DeserializeObj<MyCommand>(buffer, bytesRec);
+                    if (result.CommandResult)
+                    { uiContext.Post(i => MessageBox.Show("Процес успішно створено!"), null); }
+                    else { uiContext.Post(i => MessageBox.Show("Помилка створення процесу!"), null); }
+                }
+                catch (Exception ex) { uiContext.Post(i => MessageBox.Show(ex.Message), null); }
+            });
+        }
+
+        private async void KillProcess()
+        {
+
+            MyProcess? curentProcess = dataGridView1.CurrentRow.DataBoundItem as MyProcess;
+            await Task.Run(() =>
+            {
+                try
+                {
+                    MyCommand res = new MyCommand() { NameOfCommand = "KillProcess", IdProcess = curentProcess.ProcessId };
+                    Serialization_Deserialization serialization = new Serialization_Deserialization();
+                    sock.Send(serialization.SerializeObj(res));
+                    byte[] buffer = new byte[65536];
+                    int bytesRec = sock.Receive(buffer);
+                    MyCommand result = serialization.DeserializeObj<MyCommand>(buffer, bytesRec);
+                    if (result.CommandResult)
+                    { uiContext.Post(i => MessageBox.Show("Процес успішно видалено!"), null); }
+                    else { uiContext.Post(i => MessageBox.Show("Помилка видалення процесу!"), null); }
+                }
+                catch (Exception ex) { uiContext.Post(i => MessageBox.Show(ex.Message), null); }
+            });
+        }
+
         private void label2_Click(object sender, EventArgs e) { }
         private void label3_Click(object sender, EventArgs e) { }
 
@@ -84,21 +125,21 @@ namespace Client_TaskManager
         private void button1_Click(object sender, EventArgs e) { Connect(); }
         
         // Оновити список
-        private void button2_Click(object sender, EventArgs e)
+        private async void button2_Click(object sender, EventArgs e)
         {
-
+            await RefreshGridList();
         }
 
         // Завершити процес
         private void button3_Click(object sender, EventArgs e)
         {
-
+            KillProcess();
         }
 
         // Створити процес
-        private void button4_Click(object sender, EventArgs e)
+        private async void button4_Click(object sender, EventArgs e)
         {
-
+            await CreateProcess();
         }
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
