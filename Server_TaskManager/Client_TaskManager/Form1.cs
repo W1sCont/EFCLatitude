@@ -1,6 +1,7 @@
 using ClassLibrary_MyCommand;
 using ClassLibrary_MyProcess;
 using ClassLibrary_Serialization;
+using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -54,18 +55,21 @@ namespace Client_TaskManager
         {
             await Task.Run(() =>
             {
-                try
-                {
-                    MyCommand processList = new MyCommand() { NameOfCommand = "ListProcess" };
-                    Serialization_Deserialization serialization = new Serialization_Deserialization();
-                    sock.Send(serialization.SerializeObj(processList));
-                    byte[] buffer = new byte[65536];
-                    int bytesRec = sock.Receive(buffer);
-                    List<MyProcess> list = serialization.DeserializeObj<List<MyProcess>>(buffer, bytesRec);
-                    uiContext.Post(i => dataGridView1.DataSource = list, null);
+            try
+            {
+                MyCommand processList = new MyCommand() { NameOfCommand = "ListProcess" };
+                Serialization_Deserialization serialization = new Serialization_Deserialization();
+                sock.Send(serialization.SerializeObj(processList));
+                byte[] buffer = new byte[65536];
+                int bytesRec = sock.Receive(buffer);
+                List<MyProcess> list = serialization.DeserializeObj<List<MyProcess>>(buffer, bytesRec);
+                    uiContext.Post(i =>
+                    { dataGridView1.DataSource = list;
+                        dataGridView1.Columns["ProcessId"].Visible = false;
+                    }, null);
                 }
                 catch (Exception ex) { uiContext.Post(i => MessageBox.Show(ex.Message), null); }
-            });
+            }); 
         }
 
         private async Task CreateProcess()

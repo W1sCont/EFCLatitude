@@ -19,8 +19,7 @@ namespace MyServer
             {
                 MainClass server = new MainClass();
                 Console.WriteLine("connect....");
-                server.Accept();
-                Console.WriteLine("connected!");
+                _ = server.Accept();
                 Console.ReadKey();
             }
             catch (Exception ex)
@@ -99,7 +98,7 @@ namespace MyServer
                 while (true)
                 {
                     Socket handler = await sListener.AcceptAsync();
-                    Receive(handler);
+                    _ = Receive(handler);
                 }
             }
             catch (Exception ex)
