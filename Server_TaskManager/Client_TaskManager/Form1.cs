@@ -44,11 +44,9 @@ namespace Client_TaskManager
 
                     sock = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                     sock.Connect(ipEndPoint);
+                    uiContext.Post(i => MessageBox.Show("Connected!"), null);
                 }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Клієнт: " + ex.Message);
-                }
+                catch (Exception ex) { uiContext.Post(i => MessageBox.Show(ex.Message), null); }
             });
         }
 

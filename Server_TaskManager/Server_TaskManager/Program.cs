@@ -10,7 +10,7 @@ namespace MyServer
     class MainClass
     {
         List<MyProcess> processList = new List<MyProcess>();
-        static async Task Main()
+        static void Main()
         {
             Console.OutputEncoding = System.Text.Encoding.UTF8;
             Console.InputEncoding = System.Text.Encoding.UTF8;
@@ -18,7 +18,9 @@ namespace MyServer
             try
             {
                 MainClass server = new MainClass();
-                await server.Accept();
+                Console.WriteLine("connect....");
+                server.Accept();
+                Console.WriteLine("connected!");
                 Console.ReadKey();
             }
             catch (Exception ex)
@@ -86,27 +88,24 @@ namespace MyServer
 
         private async Task Accept()
         {
-            await Task.Run(() =>
+            try
             {
-                try
-                {
-                    IPEndPoint ipEndPoint = new IPEndPoint(IPAddress.Any, 49152);
-                    Socket sListener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                IPEndPoint ipEndPoint = new IPEndPoint(IPAddress.Any, 49152);
+                Socket sListener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
-                    sListener.Bind(ipEndPoint);
+                sListener.Bind(ipEndPoint);
 
-                    sListener.Listen(1);
-                    while (true)
-                    {
-                        Socket handler = sListener.Accept();
-                        _ = Receive(handler);
-                    }
-                }
-                catch (Exception ex)
+                sListener.Listen(10);
+                while (true)
                 {
-                    Console.WriteLine(ex.Message);
+                    Socket handler = await sListener.AcceptAsync();
+                    Receive(handler);
                 }
-            });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
 
         private async Task AsyncListProcess()
