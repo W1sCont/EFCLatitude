@@ -58,12 +58,12 @@ namespace screenSharingServer
             {
                 while (true)
                 {
-                    if(token.IsCancellationRequested) return;
+                    if (token.IsCancellationRequested) return;
                     using Bitmap btmp = new Bitmap(size.Width, size.Height);
                     using Graphics graf = Graphics.FromImage(btmp);
                     using MemoryStream ms = new MemoryStream();
 
-                    graf.CopyFromScreen(0,0,0,0, size.Size);
+                    graf.CopyFromScreen(0, 0, 0, 0, size.Size);
                     btmp.Save(ms, ImageFormat.Jpeg);
                     byte[] buffer = ms.ToArray();
                     await netstream.WriteAsync(BitConverter.GetBytes(buffer.Length), 0, 4);
@@ -85,6 +85,18 @@ namespace screenSharingServer
             tcpClient.Close();
 
             MessageBox.Show("З'єднання розірвано");
+        }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (netstream != null)
+            {
+                string theReply = "Я завершую обробку повідомлень";
+                byte[] msg = Encoding.Default.GetBytes(theReply);
+                netstream.Write(msg, 0, msg.Length);
+            }
+            netstream?.Close();
+            tcpClient?.Close();
         }
     }
 }
